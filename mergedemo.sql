@@ -4,7 +4,7 @@
 SET XACT_ABORT ON;
 BEGIN TRAN;
 
-MERGE dbo.DimCustomer_T1 AS tgt WITH (HOLDLOCK)
+MERGE dbo.DimCustomer_T1 WITH (HOLDLOCK) AS tgt
 USING dbo.Customers_OLTP AS src
     ON tgt.CustomerNK = src.CustomerID
 
@@ -22,4 +22,6 @@ THEN UPDATE SET
 
 WHEN NOT MATCHED BY TARGET
 THEN INSERT (CustomerNK, CustomerName, City, State, Zip)
-     VALUES (src.CustomerID, src.CustomerName, src.Cit
+     VALUES (src.CustomerID, src.CustomerName, src.City, src.State, src.Zip);
+
+COMMIT;

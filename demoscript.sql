@@ -1,5 +1,5 @@
 /*===============================================================
-   SCD DEMO — Minimal run version (3 Jane changes + 1 non-Jane)
+   SCD DEMO
    Safe to re-run: YES (drops & recreates DB)
 ================================================================*/
 
@@ -91,7 +91,7 @@ UPDATE dbo.Customers_OLTP
   SET Zip='54902', UpdatedAt='2016-03-12'
 WHERE CustomerID=1002;
 
--- 2021-11-05: Jane Smith (or Jones after 2018 revert, but we’re skipping that) -> Jane Smith-Parker
+-- 2021-11-05: Jane Smith -> Jane Smith-Parker
 UPDATE dbo.Customers_OLTP
   SET CustomerName='Jane Smith-Parker', UpdatedAt='2021-11-05'
 WHERE CustomerID=1001;
@@ -231,3 +231,4 @@ SELECT CustomerNK, CustomerName, City, State, Zip
 FROM dbo.DimCustomer_T2
 WHERE @AsOf >= RowEffectiveDate AND @AsOf < RowEndDate
 ORDER BY CustomerNK;
+

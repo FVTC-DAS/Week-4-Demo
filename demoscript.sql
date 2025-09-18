@@ -81,15 +81,69 @@ UPDATE dbo.Customers_OLTP
   SET CustomerName='Jane Jones', UpdatedAt='2012-06-15'
 WHERE CustomerID=1001;
 
+
+-- Upsert into T1
+INSERT INTO dbo.DimCustomer_T1 (CustomerNK, CustomerName, City, State, Zip)
+SELECT s.CustomerID, s.CustomerName, s.City, s.State, s.Zip
+FROM dbo.Customers_OLTP s
+LEFT JOIN dbo.DimCustomer_T1 d
+  ON d.CustomerNK = s.CustomerID
+WHERE d.CustomerNK IS NULL;
+
+UPDATE d
+   SET d.CustomerName = s.CustomerName,
+       d.City         = s.City,
+       d.State        = s.State,
+       d.Zip          = s.Zip
+FROM dbo.DimCustomer_T1 d
+JOIN dbo.Customers_OLTP s
+  ON d.CustomerNK = s.CustomerID;
+
 -- 2015-09-01: Jane moves to Neenah, WI 54956
 UPDATE dbo.Customers_OLTP
   SET City='Neenah', State='WI', Zip='54956', UpdatedAt='2015-09-01'
 WHERE CustomerID=1001;
 
+-- Upsert into T1
+INSERT INTO dbo.DimCustomer_T1 (CustomerNK, CustomerName, City, State, Zip)
+SELECT s.CustomerID, s.CustomerName, s.City, s.State, s.Zip
+FROM dbo.Customers_OLTP s
+LEFT JOIN dbo.DimCustomer_T1 d
+  ON d.CustomerNK = s.CustomerID
+WHERE d.CustomerNK IS NULL;
+
+UPDATE d
+   SET d.CustomerName = s.CustomerName,
+       d.City         = s.City,
+       d.State        = s.State,
+       d.Zip          = s.Zip
+FROM dbo.DimCustomer_T1 d
+JOIN dbo.Customers_OLTP s
+  ON d.CustomerNK = s.CustomerID;
+
+
 -- 2016-03-12: Mark Lee ZIP correction
 UPDATE dbo.Customers_OLTP
   SET Zip='54902', UpdatedAt='2016-03-12'
 WHERE CustomerID=1002;
+
+
+-- Upsert into T1
+INSERT INTO dbo.DimCustomer_T1 (CustomerNK, CustomerName, City, State, Zip)
+SELECT s.CustomerID, s.CustomerName, s.City, s.State, s.Zip
+FROM dbo.Customers_OLTP s
+LEFT JOIN dbo.DimCustomer_T1 d
+  ON d.CustomerNK = s.CustomerID
+WHERE d.CustomerNK IS NULL;
+
+UPDATE d
+   SET d.CustomerName = s.CustomerName,
+       d.City         = s.City,
+       d.State        = s.State,
+       d.Zip          = s.Zip
+FROM dbo.DimCustomer_T1 d
+JOIN dbo.Customers_OLTP s
+  ON d.CustomerNK = s.CustomerID;
 
 -- 2021-11-05: Jane Smith -> Jane Smith-Parker
 UPDATE dbo.Customers_OLTP
@@ -231,4 +285,5 @@ SELECT CustomerNK, CustomerName, City, State, Zip
 FROM dbo.DimCustomer_T2
 WHERE @AsOf >= RowEffectiveDate AND @AsOf < RowEndDate
 ORDER BY CustomerNK;
+
 
